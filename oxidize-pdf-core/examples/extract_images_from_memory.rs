@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Read PDF file into memory
     let input_pdf = "tests/fixtures/sample.pdf";
     println!("Loading PDF from: {}", input_pdf);
-    
+
     let pdf_bytes = match std::fs::read(input_pdf) {
         Ok(bytes) => {
             println!("Loaded {} bytes into memory\n", bytes.len());
@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Create a Cursor (in-memory reader) from the bytes
     let cursor = Cursor::new(pdf_bytes);
-    
+
     // Parse the PDF from the cursor
     println!("Parsing PDF from memory...");
     let reader = PdfReader::new(cursor)?;
@@ -50,7 +50,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Create ImageExtractor with the in-memory document
     // This works because ImageExtractor is now generic over R: Read + Seek
     let mut extractor = ImageExtractor::new(document, options);
-    
+
     println!("Extracting images...");
     match extractor.extract_all() {
         Ok(images) => {
@@ -74,7 +74,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
 
             println!("\nImages extracted to: examples/results/extracted_images_memory/");
-            println!("\nThis demonstrates that ImageExtractor can work with any Read + Seek source,");
+            println!(
+                "\nThis demonstrates that ImageExtractor can work with any Read + Seek source,"
+            );
             println!("not just files. Useful for web services, memory-constrained environments,");
             println!("or when working with encrypted/compressed data streams.");
         }

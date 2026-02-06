@@ -804,8 +804,8 @@ mod tests {
 
     #[test]
     fn test_image_extractor_with_cursor() {
+        use crate::parser::{PdfDocument, PdfReader};
         use std::io::Cursor;
-        use crate::parser::{PdfReader, PdfDocument};
 
         // Create a simple PDF in memory
         let temp_dir = TempDir::new().unwrap();
@@ -824,7 +824,7 @@ mod tests {
 
         // Load the PDF into memory
         let pdf_bytes = std::fs::read(&input_path).unwrap();
-        
+
         // Create a PdfDocument from a Cursor (in-memory reader)
         let cursor = Cursor::new(pdf_bytes);
         let reader = PdfReader::new(cursor).unwrap();
@@ -840,11 +840,15 @@ mod tests {
         // This should compile and work with Cursor<Vec<u8>>
         let mut extractor = ImageExtractor::new(document, options);
         let result = extractor.extract_all();
-        
+
         // Should succeed even if no images found
-        assert!(result.is_ok(), "Image extraction from Cursor failed: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "Image extraction from Cursor failed: {:?}",
+            result.err()
+        );
         let images = result.unwrap();
-        
+
         // This PDF has no images, so should be empty
         assert_eq!(images.len(), 0);
     }
